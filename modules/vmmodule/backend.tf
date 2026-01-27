@@ -3,6 +3,6 @@ terraform {
     resource_group_name  = "ResourceGroup1"
     storage_account_name = "storageaccount2cat"
     container_name       = "scontainer1"
-    key                  = "blob.tfstate"
+    key                  = "vm.tfstate"
   }
 }
