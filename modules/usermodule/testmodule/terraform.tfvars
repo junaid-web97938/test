@@ -1,4 +1,4 @@
-tenant_domain = "junaidweb97outlook.onmicrosoft.com"
+tenant_domain = "junaidweb1985gmail.onmicrosoft.com"
 
 users = {
   man = {
