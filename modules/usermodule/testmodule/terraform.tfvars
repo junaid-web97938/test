@@ -1,8 +1,8 @@
 tenant_domain = "junaidweb1985gmail.onmicrosoft.com"
 
 users = {
-  phone = {
-    display_name = "phone"
+  monkey = {
+    display_name = "monkey"
     password     = "Ironyellow@123456!"
   }
    

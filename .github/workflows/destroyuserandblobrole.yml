@@ -1,0 +1,39 @@
+name: Destroy blobuserrole
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    env:
+      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+# destroy user
+      - name: Terraform Init
+        working-directory: "modules/usermodule/testmodule"
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: "modules/usermodule/testmodule"
+        run: terraform destroy -auto-approve
+# destroy blob
+      - name: Terraform Init
+        working-directory: "modules/blobmodule"
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: "modules/blobmodule"
+        run: terraform destroy -auto-approve
