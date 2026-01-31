@@ -37,3 +37,16 @@ jobs:
       - name: Terraform Destroy
         working-directory: "modules/blobmodule"
         run: terraform destroy -auto-approve
+
+# destroyrole access pipleine below
+      - name: Terraform Init
+        run: terraform init
+        working-directory: "modules/roleaccess"
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: "modules/roleaccess"
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: "modules/roleaccess"
