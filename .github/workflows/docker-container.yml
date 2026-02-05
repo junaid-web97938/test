@@ -10,7 +10,6 @@ permissions:
 jobs:
   terraform-deploy:
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
       # Step 1: Checkout repository
@@ -23,8 +22,8 @@ jobs:
         with:
           terraform_version: 1.6.0
 
-      # Step 3: Azure Login using OIDC
-      - name: Azure Login (OIDC)
+      # Step 3: Azure Login using Service Principal + OIDC
+      - name: Azure Login (Service Principal + OIDC)
         uses: azure/login@v1
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
@@ -33,16 +32,12 @@ jobs:
           enable-oidc: true
           enable-AzPSSession: false
 
-      # Step 4: Terraform Init with backend
+      # Step 4: Terraform Init (backend-safe)
       - name: Terraform Init
         working-directory: modules/docker-container
-        run: |
-          # Verify Azure CLI login
-          az account show
-          # Initialize Terraform and reconfigure backend
-          terraform init -input=false -reconfigure
+        run: terraform init -input=false -reconfigure
 
-      # Step 5: Terraform Plan using tfvars
+      # Step 5: Terraform Plan
       - name: Terraform Plan
         working-directory: modules/docker-container
         run: terraform plan -var-file="terraform.tfvars" -out=tfplan
