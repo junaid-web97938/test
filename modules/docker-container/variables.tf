@@ -1,74 +1,50 @@
 variable "resource_group_name" {
-  description = "Name of the resource group"
   type        = string
+  description = "Azure Resource Group name"
 }
 
 variable "location" {
-  description = "Azure region"
   type        = string
+  description = "Azure region"
 }
 
 variable "container_group_name" {
-  description = "ACI container group name"
   type        = string
+  description = "Container Group name"
 }
 
 variable "container_name" {
-  description = "Container name"
   type        = string
+  description = "Container name"
+  default     = "mycontainer"
 }
 
 variable "container_image" {
-  description = "Container image"
   type        = string
+  description = "Container image"
+  default     = "ubuntu"
 }
 
 variable "container_cpu" {
-  description = "CPU cores for container"
   type        = number
+  description = "Container CPU cores"
+  default     = 1
 }
 
 variable "container_memory" {
-  description = "Memory in GB"
   type        = number
+  description = "Container memory in GB"
+  default     = 1.5
 }
 
 variable "container_port" {
-  description = "Exposed container port"
   type        = number
+  description = "Container port"
+  default     = 80
 }
 
 variable "dns_name_label" {
-  description = "DNS name label for public IP"
   type        = string
-}
-
-variable "ip_address_type" {
-  description = "Public or Private"
-  type        = string
-  default     = "Public"
-}
-
-variable "os_type" {
-  description = "Linux or Windows"
-  type        = string
-  default     = "Linux"
-}
-
-variable "environment_variables" {
-  description = "Plain environment variables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "secure_environment_variables" {
-  description = "Secure environment variables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "tags" {
-  description = "Resource tags"
-  type        = map(string)
-  default     = {}
+  description = "Public DNS label for container group"
+  default     = "scontainer1"
 }
