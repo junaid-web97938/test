@@ -1,4 +1,4 @@
-name: aci container 1
+name: aci-container-deploy
 
 on:
   workflow_dispatch:
@@ -13,37 +13,37 @@ jobs:
     environment: production
 
     steps:
+      # Step 1: Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.6.0
 
+      # Step 3: Azure Login using OIDC
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          enable-oidc: true
+          enable-AzPSSession: false
+
+      # Step 4: Terraform Init
       - name: Terraform Init
         working-directory: modules/docker-container
-        env:
-          ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          ARM_USE_OIDC: "true"
         run: terraform init
 
+      # Step 5: Terraform Plan
       - name: Terraform Plan
         working-directory: modules/docker-container
-        env:
-          ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          ARM_USE_OIDC: "true"
         run: terraform plan -out=tfplan
 
+      # Step 6: Terraform Apply
       - name: Terraform Apply
         working-directory: modules/docker-container
-        env:
-          ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          ARM_USE_OIDC: "true"
         run: terraform apply -auto-approve tfplan
