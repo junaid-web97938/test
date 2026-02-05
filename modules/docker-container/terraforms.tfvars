@@ -1,9 +1,6 @@
-resource_group_name     = "ResourceGroup1"
-location                = "West US 2"
-container_group_name    = "scontainer1"
-container_name          = "scontainer1"
-container_image         = "ubuntu"
-container_cpu           = 1
-container_memory        = 1.5
-container_port          = 80
-dns_name_label          = "scontainer1"
+resource_group_name  = "ResourceGroup1"
+location             = "West US 2"
+container_group_name = "scontainer1"
+container_name       = "scontainer1"
+container_image      = "ubuntu"
+dns_name_label       = "scontainer1"
