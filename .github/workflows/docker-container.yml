@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -22,15 +22,15 @@ jobs:
         with:
           terraform_version: 1.6.0
 
-      # Step 3: Set Azure SP credentials for Terraform
-      - name: Set Azure Service Principal Environment
+      # Step 3: Set Azure Service Principal credentials
+      - name: Set Azure SP credentials
         run: |
           echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
-      # Step 4: Terraform Init (backend-safe)
+      # Step 4: Terraform Init
       - name: Terraform Init
         working-directory: modules/docker-container
         run: terraform init -input=false -reconfigure
