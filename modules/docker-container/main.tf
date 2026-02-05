@@ -18,6 +18,7 @@ resource "azurerm_container_group" "aci" {
     image  = var.container_image
     cpu    = var.container_cpu
     memory = var.container_memory
+
     ports {
       port     = var.container_port
       protocol = "TCP"
