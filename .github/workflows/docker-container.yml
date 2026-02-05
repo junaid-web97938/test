@@ -20,7 +20,7 @@ jobs:
         with:
           terraform_version: 1.6.0
 
-      - name: Set Azure SP Environment Variables
+      - name: Set Azure SP environment variables
         run: |
           echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
@@ -29,7 +29,13 @@ jobs:
 
       - name: Terraform Init
         working-directory: modules/docker-container
-        run: terraform init -input=false -reconfigure
+        run: terraform init \
+          -input=false \
+          -backend-config="client_id=${{ secrets.AZURE_CLIENT_ID }}" \
+          -backend-config="client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
+          -backend-config="tenant_id=${{ secrets.AZURE_TENANT_ID }}" \
+          -backend-config="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+          -reconfigure
 
       - name: Terraform Plan
         working-directory: modules/docker-container
