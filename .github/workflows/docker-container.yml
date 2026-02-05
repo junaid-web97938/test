@@ -13,7 +13,7 @@ jobs:
     environment: production
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -33,18 +33,19 @@ jobs:
           enable-oidc: true
           enable-AzPSSession: false
 
-      # Step 4: Initialize Terraform with backend config
+      # Step 4: Terraform Init with backend
       - name: Terraform Init
         working-directory: modules/docker-container
         run: |
-          # Ensure backend can authenticate via Azure CLI
+          # Verify Azure CLI login
           az account show
+          # Initialize Terraform and reconfigure backend
           terraform init -input=false -reconfigure
 
-      # Step 5: Terraform Plan
+      # Step 5: Terraform Plan using tfvars
       - name: Terraform Plan
         working-directory: modules/docker-container
-        run: terraform plan -out=tfplan
+        run: terraform plan -var-file="terraform.tfvars" -out=tfplan
 
       # Step 6: Terraform Apply
       - name: Terraform Apply
