@@ -8,34 +8,42 @@ permissions:
   contents: read
 
 jobs:
-  deploy-aci:
+  terraform-deploy:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Azure Login
-        uses: azure/login@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
-      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      ARM_USE_OIDC: "true"
+          terraform_version: 1.6.0
 
-      - name: Create Azure Container Instance
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.59.0
-          working-directory: modules/docker-container
-          inlineScript: |
-            az container create \
-              --resource-group ResourceGroup1 \
-              --name scontainer1 \
-              --image ubuntu:latest \
-              --cpu 1 \
-              --memory 1.5 \
-              --dns-name-label aci-demo-nginx \
-              --ports 80 \
-              --environment-variables ENV=prod SECRET_KEY=${{ secrets.SECRET_KEY }} \
-              --command-line "sleep infinity"
+      - name: Terraform Init
+        working-directory: modules/docker-container
+        env:
+          ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          ARM_USE_OIDC: "true"
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: modules/docker-container
+        env:
+          ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          ARM_USE_OIDC: "true"
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        working-directory: modules/docker-container
+        env:
+          ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          ARM_USE_OIDC: "true"
+        run: terraform apply -auto-approve tfplan
