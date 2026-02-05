@@ -1,4 +1,4 @@
-name: docker-container
+name: aci container
 
 on:
   workflow_dispatch:
@@ -10,6 +10,7 @@ permissions:
 jobs:
   deploy-aci:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -17,7 +18,10 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: "true"
 
       - name: Create Azure Container Instance
         uses: azure/CLI@v1
