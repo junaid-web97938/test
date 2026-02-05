@@ -3,6 +3,6 @@ terraform {
     resource_group_name  = "ResourceGroup1"
     storage_account_name = "storageaccountnewazure"
     container_name       = "scontainer1"
-    key                  = "dock3.tfstate"
+    key                  = "dock4.tfstate"
   }
 }
